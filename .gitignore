@@ -1,0 +1,11 @@
+*.class
+*.log
+
+# py specific
+*.pyo
+*.pyc
+db.sqlite3*
+venv
+venv3
+.ropeproject
+
