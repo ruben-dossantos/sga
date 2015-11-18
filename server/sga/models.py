@@ -28,7 +28,7 @@ class UserDetail(AbstractUser):
     )
 
     name = models.CharField(max_length=50)
-    user_type = models.IntegerField(choices=UserTypes)
+    user_type = models.IntegerField(choices=UserTypes, blank=True, null=True)
 
 class Store(models.Model):
     name = models.CharField(max_length=30)
