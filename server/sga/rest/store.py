@@ -2,7 +2,7 @@
 
 import django_filters
 from rest_framework import viewsets, permissions, serializers
-from sga.models import Store
+from sga.models import Store, UserDetail
 
 
 class StoreSerializer(serializers.ModelSerializer):
@@ -14,6 +14,17 @@ class StoreReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Store
         depth = 1
+
+    class StoreUserReadSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = UserDetail
+            depth = 2
+            fields = (
+                'id', 'username', 'email', 'name', 'is_active',
+                'is_superuser',
+            )
+
+    user = StoreUserReadSerializer()
 
 
 class StoreViewSet(viewsets.ModelViewSet):

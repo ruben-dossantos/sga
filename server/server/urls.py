@@ -10,6 +10,7 @@ from sga.rest.beacon import BeaconViewSet
 from sga.rest.area_beacon import AreaBeaconViewSet
 from sga.rest.device import DeviceViewSet
 from sga.rest.tracking_area import TrackingAreaViewSet
+from sga.rest.user import UserViewSet
 
 router = routers.DefaultRouter()
 
@@ -30,6 +31,7 @@ routees = [
     (r'area_beacons', AreaBeaconViewSet),
     (r'devices', DeviceViewSet),
     (r'tracking_areas', TrackingAreaViewSet),
+    (r'users', UserViewSet),
 ]
 
 for routee in routees:
