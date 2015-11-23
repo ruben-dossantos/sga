@@ -48,7 +48,8 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework.filters.DjangoFilterBackend',
     ),
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'UPLOADED_FILES_USE_URL': True,
 }
 
 MIDDLEWARE_CLASSES = (
@@ -118,3 +119,6 @@ AUTH_USER_MODEL = 'sga.UserDetail'
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = ALLOWED_HOSTS
+
+UPLOAD_TO = "images"
+UPLOAD_TO_IMAGES = UPLOAD_TO + "/promotions"

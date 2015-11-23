@@ -2,6 +2,7 @@
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from server.settings import UPLOAD_TO_IMAGES
 
 # Create your models here.
 
@@ -40,22 +41,38 @@ class Store(models.Model):
                                on_delete=models.PROTECT)
     user = models.ForeignKey(UserDetail, on_delete=models.PROTECT)
 
+    def __unicode__(self):
+        return self.name
+
 class PromotionType(models.Model):
     name = models.CharField(max_length=30)
 
+    def __unicode__(self):
+        return self.name
+
 class AgeGroup(models.Model):
     name = models.CharField(max_length=30)
+
+    def __unicode__(self):
+        return self.name
+
+class Image(models.Model):
+    image = models.ImageField(upload_to=UPLOAD_TO_IMAGES, blank=True, null=True)
 
 class Promotion(models.Model):
     name = models.CharField(max_length=100)
     promo_code = models.CharField(max_length=20, blank=True, null=True)
     description = models.CharField(max_length=200, blank=True, null=True)
     link = models.CharField(max_length=200, blank=True, null=True)
-    #image
+    image = models.ForeignKey(Image, blank=True, null=True,
+                             on_delete=models.PROTECT)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     is_flash_promotion = models.BooleanField(default=False)
     promotion_type = models.ForeignKey(PromotionType, on_delete=models.PROTECT)
+
+    def __unicode__(self):
+        return self.name
 
 class AgeGroupPromotion(models.Model):
     age_group = models.ForeignKey(AgeGroup, on_delete=models.PROTECT)
@@ -68,6 +85,9 @@ class Area(models.Model):
     name = models.CharField(max_length=30)
     store = models.ForeignKey(Store, on_delete=models.PROTECT)
 
+    def __unicode__(self):
+        return self.name
+
 class AreaPromotion(models.Model):
     area = models.ForeignKey(Area, on_delete=models.PROTECT)
     promotion = models.ForeignKey(Promotion, on_delete=models.PROTECT)
@@ -78,6 +98,9 @@ class AreaPromotion(models.Model):
 class Beacon(models.Model):
     store = models.ForeignKey(Store, on_delete=models.PROTECT)
     uuid = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return self.uuid
 
 class AreaBeacon(models.Model):
     area = models.ForeignKey(Area, on_delete=models.PROTECT)
