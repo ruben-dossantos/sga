@@ -1,5 +1,7 @@
 from django.conf.urls import url, include
 from rest_framework import routers
+from django.conf.urls.static import static
+from rest_framework.authtoken import views
 from sga.rest.generated import *
 from sga.rest.store import StoreViewSet
 from sga.rest.promotion import PromotionViewSet
@@ -12,11 +14,14 @@ from sga.rest.device import DeviceViewSet
 from sga.rest.tracking_area import TrackingAreaViewSet
 from sga.rest.user import UserViewSet
 from sga.rest.image import ImageViewSet
+from server import settings
 
-router = routers.DefaultRouter()
+
+router = routers.DefaultRouter(trailing_slash=False)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
+router.include_root_view = settings.DEBUG
 
 routees = [
     (r'brands', BrandViewSet),
@@ -41,5 +46,12 @@ for routee in routees:
 
 urlpatterns = [
     url(r'^api/', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url('^api-token-auth/', views.obtain_auth_token),
+    url(r'^rest-auth/', include('rest_auth.urls')),
+    url(r'^', include('django.contrib.auth.urls'))
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATIC_ROOT)

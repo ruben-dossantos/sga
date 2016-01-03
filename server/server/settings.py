@@ -52,6 +52,8 @@ REST_FRAMEWORK = {
     'UPLOADED_FILES_USE_URL': True,
 }
 
+STATIC_ROOT = '/images/'
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
