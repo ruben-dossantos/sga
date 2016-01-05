@@ -18,6 +18,7 @@ class AgeGroupPromotionReadSerializer(serializers.ModelSerializer):
 
 class AgeGroupPromotionViewSet(viewsets.ModelViewSet):
     model = AgeGroupPromotion
+    filter_fields = ['age_group']
     queryset = AgeGroupPromotion.objects.all()
 
     def get_serializer_class(self):

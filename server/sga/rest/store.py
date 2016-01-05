@@ -29,6 +29,7 @@ class StoreReadSerializer(serializers.ModelSerializer):
 
 class StoreViewSet(viewsets.ModelViewSet):
     model = Store
+    filter_fields = ['parent']
     queryset = Store.objects.all()
 
     def get_serializer_class(self):

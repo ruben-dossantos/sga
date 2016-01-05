@@ -18,6 +18,7 @@ class PromotionReadSerializer(serializers.ModelSerializer):
 
 class PromotionViewSet(viewsets.ModelViewSet):
     model = Promotion
+    filter_fields = ['promotion_type']
     queryset = Promotion.objects.all()
 
     def get_serializer_class(self):
