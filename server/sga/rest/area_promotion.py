@@ -18,6 +18,7 @@ class AreaPromotionReadSerializer(serializers.ModelSerializer):
 
 class AreaPromotionViewSet(viewsets.ModelViewSet):
     model = AreaPromotion
+    filter_fields = ['area']
     queryset = AreaPromotion.objects.all()
 
     def get_serializer_class(self):
