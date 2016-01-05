@@ -18,6 +18,7 @@ class AreaBeaconReadSerializer(serializers.ModelSerializer):
 
 class AreaBeaconViewSet(viewsets.ModelViewSet):
     model = AreaBeacon
+    filter_fields = ['beacon']
     queryset = AreaBeacon.objects.all()
 
     def get_serializer_class(self):

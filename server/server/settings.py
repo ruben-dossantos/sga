@@ -15,9 +15,13 @@ SECRET_KEY = '!xrrbd^jkoi!4f%5vtl*h2wyor!&*3hhlws)3*xtw2l39%f=mn'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "localhost",
+    "localhost", "compu.cloudapp.net", "40.78.144.251"
 ]
 
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = ALLOWED_HOSTS
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
