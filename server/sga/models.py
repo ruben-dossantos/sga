@@ -111,7 +111,6 @@ class AreaBeacon(models.Model):
 
 class Device(models.Model):
     identifier = models.CharField(max_length=100)
-    store = models.ForeignKey(Store, on_delete=models.PROTECT)
     gender = models.CharField(max_length=1)
     age = models.IntegerField()
 
