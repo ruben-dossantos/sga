@@ -52,6 +52,8 @@ class PromotionType(models.Model):
 
 class AgeGroup(models.Model):
     name = models.CharField(max_length=30)
+    age_min = models.IntegerField()
+    age_max = models.IntegerField()
 
     def __unicode__(self):
         return self.name
@@ -70,6 +72,8 @@ class Promotion(models.Model):
     end_date = models.DateTimeField()
     is_flash_promotion = models.BooleanField(default=False)
     promotion_type = models.ForeignKey(PromotionType, on_delete=models.PROTECT)
+    price = models.IntegerField()
+    discount = models.IntegerField()
 
     def __unicode__(self):
         return self.name
