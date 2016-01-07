@@ -84,7 +84,7 @@ class StatsView(views.APIView):
                 'area': {
                     'id': area.id,
                     'name': area.name,
-                    'devices': stats.filter(area=area).annotate(Count('device', distinct=True)).count(),
+                    'nr_of_devices': stats.filter(area=area).annotate(Count('device', distinct=True)).count(),
                     'best_day': self.get_max_day(stats.filter(area=area)),
                     'best_age': self.get_best_age(stats.filter(area=area))
                 }
