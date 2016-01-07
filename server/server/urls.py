@@ -14,6 +14,7 @@ from sga.rest.device import DeviceViewSet
 from sga.rest.tracking_area import TrackingAreaViewSet
 from sga.rest.user import UserViewSet
 from sga.rest.image import ImageViewSet
+from sga.rest.stats import StatsView
 from server import settings
 
 
@@ -45,8 +46,10 @@ for routee in routees:
     router.register(routee[0], routee[1], routee[0])
 
 urlpatterns = [
-    url(r'^api/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/stats',
+        StatsView.as_view()),
+    url(r'^api/', include(router.urls)),
     url('^api-token-auth/', views.obtain_auth_token),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^', include('django.contrib.auth.urls'))
