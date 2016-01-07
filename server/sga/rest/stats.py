@@ -33,8 +33,8 @@ class StatsView(views.APIView):
         if store.parent:
             # Simple store
             json['area_data'] = self.process_areas(stats)
-            json['nr_of_devices'] = stats.filter(area__store=store).annotate(Count('device', distinct=True)).count(),
-            json['best_day'] =  self.get_max_day(stats.filter(area__store=store)),
+            json['nr_of_devices'] = stats.filter(area__store=store).annotate(Count('device', distinct=True)).count()
+            json['best_day'] =  self.get_max_day(stats.filter(area__store=store))
             json['best_age'] = self.get_best_age(stats.filter(area__store=store))
         else:
             # Shopping center
