@@ -60,7 +60,8 @@ class StatsView(views.APIView):
 
     def process_stores(self, stats):
         json_data = []
-        for store in Store.objects.filter(parent=self.params.get('store')):
+        parent = self.params.get('store')
+        for store in Store.objects.filter(parent=parent):
             area_max = stats.filter(area__store=store).aggregate(Max('area'))['area__max']
             area = Area.objects.get(id=area_max)
             json = {
@@ -72,6 +73,9 @@ class StatsView(views.APIView):
                     'best_day': self.get_max_day(stats.filter(area__store=store)),
                     'best_age': self.get_best_age(stats.filter(area__store=store))
                 },
+                'nr_of_devices': stats.filter(area__store__parent=parent).annotate(Count('device', distinct=True)).count(),
+                'best_age': self.get_best_age(stats.filter(area__store__parent=parent)),
+                'best_day': self.get_max_day(stats.filter(area__store__parent=parent)),
 
             }
             json_data.append(json)
@@ -79,7 +83,8 @@ class StatsView(views.APIView):
 
     def process_areas(self, stats):
         json_data = []
-        for area in Area.objects.filter(store=self.params.get('store')):
+        store = self.params.get('store')
+        for area in Area.objects.filter(store=store):
             json = {
                 'area': {
                     'id': area.id,
@@ -87,7 +92,10 @@ class StatsView(views.APIView):
                     'nr_of_devices': stats.filter(area=area).annotate(Count('device', distinct=True)).count(),
                     'best_day': self.get_max_day(stats.filter(area=area)),
                     'best_age': self.get_best_age(stats.filter(area=area))
-                }
+                },
+                'nr_of_devices': stats.filter(area__store=store).annotate(Count('device', distinct=True)).count(),
+                'best_day': self.get_max_day(stats.filter(area__store=store)),
+                'best_age': self.get_best_age(stats.filter(area__store=store))
             }
             json_data.append(json)
         return json_data
