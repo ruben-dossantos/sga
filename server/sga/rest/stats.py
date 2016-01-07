@@ -33,10 +33,15 @@ class StatsView(views.APIView):
         if store.parent:
             # Simple store
             json['area_data'] = self.process_areas(stats)
+            json['nr_of_devices'] = stats.filter(area__store=store).annotate(Count('device', distinct=True)).count(),
+            json['best_day'] =  self.get_max_day(stats.filter(area__store=store)),
+            json['best_age'] = self.get_best_age(stats.filter(area__store=store))
         else:
             # Shopping center
             json['store_data'] = self.process_stores(stats)
-
+            json['nr_of_devices'] = stats.filter(area__store__parent=store).annotate(Count('device', distinct=True)).count()
+            json['best_age'] = self.get_best_age(stats.filter(area__store__parent=store))
+            json['best_day'] = self.get_max_day(stats.filter(area__store__parent=store))
         return json
 
 
@@ -72,11 +77,7 @@ class StatsView(views.APIView):
                     'nr_of_devices': stats.filter(area__store=store).annotate(Count('device', distinct=True)).count(),
                     'best_day': self.get_max_day(stats.filter(area__store=store)),
                     'best_age': self.get_best_age(stats.filter(area__store=store))
-                },
-                'nr_of_devices': stats.filter(area__store__parent=parent).annotate(Count('device', distinct=True)).count(),
-                'best_age': self.get_best_age(stats.filter(area__store__parent=parent)),
-                'best_day': self.get_max_day(stats.filter(area__store__parent=parent)),
-
+                }
             }
             json_data.append(json)
         return json_data
@@ -92,10 +93,7 @@ class StatsView(views.APIView):
                     'nr_of_devices': stats.filter(area=area).annotate(Count('device', distinct=True)).count(),
                     'best_day': self.get_max_day(stats.filter(area=area)),
                     'best_age': self.get_best_age(stats.filter(area=area))
-                },
-                'nr_of_devices': stats.filter(area__store=store).annotate(Count('device', distinct=True)).count(),
-                'best_day': self.get_max_day(stats.filter(area__store=store)),
-                'best_age': self.get_best_age(stats.filter(area__store=store))
+                }
             }
             json_data.append(json)
         return json_data
