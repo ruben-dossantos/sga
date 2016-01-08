@@ -15,6 +15,7 @@ from sga.rest.tracking_area import TrackingAreaViewSet
 from sga.rest.user import UserViewSet
 from sga.rest.image import ImageViewSet
 from sga.rest.stats import StatsView
+from sga.rest.promotion_filter import PromotionFilterView
 from server import settings
 
 
@@ -49,6 +50,8 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/stats',
         StatsView.as_view()),
+    url(r'^api/promotion_filter',
+        PromotionFilterView.as_view()),
     url(r'^api/', include(router.urls)),
     url('^api-token-auth/', views.obtain_auth_token),
     url(r'^rest-auth/', include('rest_auth.urls')),
