@@ -3,6 +3,7 @@
 import django_filters
 from rest_framework import viewsets, permissions, serializers
 from sga.models import Promotion
+from django.db.models import Q
 
 
 class PromotionSerializer(serializers.ModelSerializer):
@@ -24,7 +25,10 @@ class PromotionFilter(django_filters.FilterSet):
         model = Promotion
 
     def age_filter(self, queryset, value):
-        return queryset.filter(agegrouppromotion__age_group__age_min__lte=value).filter(agegrouppromotion__age_group__age_max__gte=value)
+        return queryset.filter(
+                Q(agegrouppromotion__age_group__age_min__lte=value) | Q(agegrouppromotion__age_group__age_max__gte=value)
+        ).distinct()
+        # return queryset.filter(agegrouppromotion__age_group__age_min__lte=value).filter(agegrouppromotion__age_group__age_max__gte=value)
 
     def area_filter(self, queryset, value):
         return queryset.filter(areapromotion__area=value)
