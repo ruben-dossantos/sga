@@ -34,14 +34,14 @@ class StatsView(views.APIView):
             # Simple store
             json['area_data'] = self.process_areas(stats)
             json['nr_of_devices'] = stats.filter(area__store=store).annotate(Count('device', distinct=True)).count()
-            json['best_day'] =  self.get_max_day(stats.filter(area__store=store))
+            json['best_day'] =  self.get_best_day(stats.filter(area__store=store))
             json['best_age'] = self.get_best_age(stats.filter(area__store=store))
         else:
             # Shopping center
             json['store_data'] = self.process_stores(stats)
             json['nr_of_devices'] = stats.filter(area__store__parent=store).annotate(Count('device', distinct=True)).count()
             json['best_age'] = self.get_best_age(stats.filter(area__store__parent=store))
-            json['best_day'] = self.get_max_day(stats.filter(area__store__parent=store))
+            json['best_day'] = self.get_best_day(stats.filter(area__store__parent=store))
         return json
 
 
@@ -75,7 +75,7 @@ class StatsView(views.APIView):
                     'name': store.name,
                     'best_area' : {'id': area.id, 'name': area.name},
                     'nr_of_devices': stats.filter(area__store=store).annotate(Count('device', distinct=True)).count(),
-                    'best_day': self.get_max_day(stats.filter(area__store=store)),
+                    'best_day': self.get_best_day(stats.filter(area__store=store)),
                     'best_age': self.get_best_age(stats.filter(area__store=store))
                 }
             }
@@ -91,31 +91,35 @@ class StatsView(views.APIView):
                     'id': area.id,
                     'name': area.name,
                     'nr_of_devices': stats.filter(area=area).annotate(Count('device', distinct=True)).count(),
-                    'best_day': self.get_max_day(stats.filter(area=area)),
+                    'best_day': self.get_best_day(stats.filter(area=area)),
                     'best_age': self.get_best_age(stats.filter(area=area))
                 }
             }
             json_data.append(json)
         return json_data
 
-    def get_max_day(self, stats):
+    def get_best_day(self, stats):
         json_aux = {}
+        list = []
         for stat in stats.all():
             day = str(stat.start_time.day)
+            month = str(stat.start_time.month)
+            year = str(stat.start_time.year)
+            date = year + '-' + month + '-' + day
             try:
-                json_aux['day'+day] = json_aux['day'+day] + 1
+                json_aux[date] = json_aux[date] + 1
             except:
-                json_aux['day'+day] = 1
-        max = 0
-        max_day = 0
-        for day in range(0,31):
-            try:
-                if json_aux['day'+str(day)]>max:
-                    max = json_aux['day'+str(day)]
-                    max_day = day
-            except:
-                print('do nothing')
-        return max_day
+                json_aux[date] = 1
+                list.append(date)
+
+        best_date_value = 0
+        best_date = ''
+        for index in list:
+            if json_aux[index] > best_date_value:
+                best_date_value = json_aux[index]
+                best_date = index
+
+        return best_date
 
     def get_best_age(self, stats):
         json_aux = {}
@@ -133,5 +137,5 @@ class StatsView(views.APIView):
                     max = json_aux['age'+str(age)]
                     best_age = age
             except:
-                print('do nothing')
+                None
         return best_age
