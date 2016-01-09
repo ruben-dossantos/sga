@@ -19,6 +19,7 @@ class AreaReadSerializer(serializers.ModelSerializer):
 class AreaViewSet(viewsets.ModelViewSet):
     model = Area
     queryset = Area.objects.all()
+    filter_fields = ['store']
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

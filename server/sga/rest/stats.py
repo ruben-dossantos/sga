@@ -31,6 +31,7 @@ class StatsView(views.APIView):
         store = Store.objects.get(id=self.params.get('store'))
 
         if store.parent:
+            print('simple store')
             # Simple store
             json['area_data'] = self.process_areas(stats)
             json['nr_of_devices'] = stats.filter(area__store=store).annotate(Count('device', distinct=True)).count()
@@ -38,10 +39,17 @@ class StatsView(views.APIView):
             json['best_age'] = self.get_best_age(stats.filter(area__store=store))
         else:
             # Shopping center
-            json['store_data'] = self.process_stores(stats)
-            json['nr_of_devices'] = stats.filter(area__store__parent=store).annotate(Count('device', distinct=True)).count()
-            json['best_age'] = self.get_best_age(stats.filter(area__store__parent=store))
-            json['best_day'] = self.get_best_day(stats.filter(area__store__parent=store))
+            type = self.params.get('type')
+            if type == 'area':
+                json['area_data'] = self.process_areas(stats)
+                json['nr_of_devices'] = stats.filter(area__store=store).annotate(Count('device', distinct=True)).count()
+                json['best_day'] =  self.get_best_day(stats.filter(area__store=store))
+                json['best_age'] = self.get_best_age(stats.filter(area__store=store))
+            else:
+                json['store_data'] = self.process_stores(stats)
+                json['nr_of_devices'] = stats.filter(area__store__parent=store).annotate(Count('device', distinct=True)).count()
+                json['best_age'] = self.get_best_age(stats.filter(area__store__parent=store))
+                json['best_day'] = self.get_best_day(stats.filter(area__store__parent=store))
         return json
 
 
